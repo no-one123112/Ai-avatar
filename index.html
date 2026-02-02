@@ -5,70 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Avatar Generator Pro</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Add a favicon for branding -->
 </head>
 <body>
-  <header>
-    <h1>✨ AI Avatar Generator Pro</h1>
-    <p>Create stunning avatars with AI-powered customization</p>
-  </header>
+  <div class="app-container">
+    <!-- Sidebar for Controls -->
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <h1>✨ AI Avatar Generator Pro</h1>
+        <p>Create stunning avatars with AI</p>
+      </header>
+      <div class="sidebar-content">
+        <label for="prompt">Describe Your Avatar</label>
+        <textarea id="prompt" placeholder="E.g., A cute anime girl with blue hair and glowing eyes"></textarea>
+        <small>Be specific for better results.</small>
 
-  <main>
-    <div class="card input-card">
-      <label for="prompt">Describe Your Avatar</label>
-      <textarea id="prompt" placeholder="E.g., A cute anime girl with blue hair and glowing eyes" aria-describedby="prompt-help"></textarea>
-      <small id="prompt-help">Be specific for better results (e.g., style, colors, mood).</small>
-
-      <div class="controls">
-        <div class="control-group">
-          <label for="style">Style</label>
-          <select id="style">
-            <option value="anime">Anime</option>
-            <option value="cartoon">Cartoon</option>
-            <option value="pixel">Pixel Art</option>
-            <option value="realistic">Realistic</option>
-            <option value="fantasy">Fantasy</option>
-            <option value="cyberpunk">Cyberpunk</option>
-          </select>
+        <div class="controls">
+          <div class="control-group">
+            <label for="style">Style</label>
+            <select id="style">
+              <option value="anime">Anime</option>
+              <option value="cartoon">Cartoon</option>
+              <option value="pixel">Pixel Art</option>
+              <option value="realistic">Realistic</option>
+              <option value="fantasy">Fantasy</option>
+              <option value="cyberpunk">Cyberpunk</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="size">Size (px)</label>
+            <input type="range" id="size" min="256" max="1024" value="512" step="128">
+            <span id="size-value">512</span>
+          </div>
+          <div class="control-group">
+            <label for="aspect">Aspect Ratio</label>
+            <select id="aspect">
+              <option value="square">Square (1:1)</option>
+              <option value="portrait">Portrait (3:4)</option>
+              <option value="landscape">Landscape (4:3)</option>
+            </select>
+          </div>
+          <button id="generate-btn" onclick="generateAvatar()">Generate Avatar</button>
         </div>
-        <div class="control-group">
-          <label for="size">Size (px)</label>
-          <input type="range" id="size" min="256" max="1024" value="512" step="128">
-          <span id="size-value">512</span>
-        </div>
-        <div class="control-group">
-          <label for="aspect">Aspect Ratio</label>
-          <select id="aspect">
-            <option value="square">Square (1:1)</option>
-            <option value="portrait">Portrait (3:4)</option>
-            <option value="landscape">Landscape (4:3)</option>
-          </select>
-        </div>
-        <button id="generate-btn" onclick="generateAvatar()">Generate Avatar</button>
       </div>
-    </div>
+    </aside>
 
-    <div class="card result-card">
-      <div id="loader" class="hidden">
-        <div class="spinner"></div>
-        <p>Generating your avatar...</p>
-      </div>
-      <div id="error-msg" class="hidden error"></div>
-      <img id="avatar" src="" alt="Generated Avatar" class="hidden">
-      <div class="result-actions hidden">
-        <button onclick="downloadImg('png')">Download PNG</button>
-        <button onclick="downloadImg('svg')">Download SVG</button>
-        <button onclick="shareAvatar()">Share</button>
-        <button onclick="saveToHistory()">Save to History</button>
-      </div>
-    </div>
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <section class="result-section">
+        <div id="loader" class="hidden">
+          <div class="spinner"></div>
+          <p>Generating your avatar...</p>
+          <div class="progress-bar"><div id="progress"></div></div>
+        </div>
+        <div id="error-msg" class="hidden error"></div>
+        <div id="avatar-container" class="hidden">
+          <img id="avatar" src="" alt="Generated Avatar">
+          <div class="result-actions">
+            <button onclick="downloadImg('png')">Download PNG</button>
+            <button onclick="downloadImg('svg')">Download SVG</button>
+            <button onclick="shareAvatar()">Share</button>
+            <button onclick="saveToHistory()">Save to History</button>
+          </div>
+        </div>
+      </section>
 
-    <div class="card history-card">
-      <h3>Recent Generations</h3>
-      <div id="history-gallery"></div>
-      <button onclick="clearHistory()">Clear History</button>
-    </div>
-  </main>
+      <section class="history-section">
+        <h3>Recent Generations</h3>
+        <div id="history-gallery"></div>
+        <button onclick="clearHistory()">Clear History</button>
+      </section>
+    </main>
+  </div>
 
   <footer>
     <p>AI Avatar Generator Pro — Powered by AI APIs. <a href="#privacy">Privacy Policy</a></p>
@@ -76,4 +83,4 @@
 
   <script src="script.js"></script>
 </body>
-        </html>
+</html>
