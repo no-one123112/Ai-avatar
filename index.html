@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Avatar Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>✨ AI Avatar Generator</h1>
+</header>
+
+<main>
+
+  <div class="card">
+
+    <textarea id="prompt"
+      placeholder="Describe your avatar... (cute anime avatar with blue hair)">
+    </textarea>
+
+    <div class="controls">
+      <select id="style">
+        <option>Anime</option>
+        <option>Cartoon</option>
+        <option>Pixel</option>
+        <option>Realistic</option>
+      </select>
+
+      <button onclick="generate()">Generate Avatar</button>
+    </div>
+
+  </div>
+
+  <div class="result card">
+    <div id="loader" class="hidden">Generating...</div>
+    <img id="avatar" src="" />
+    <button id="downloadBtn" class="hidden" onclick="downloadImg()">
+      Download
+    </button>
+  </div>
+
+</main>
+
+<footer>
+  Frontend Template — Ready for AI API
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
