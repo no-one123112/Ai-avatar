@@ -1,137 +1,252 @@
-// Constants
-const API_KEY = 'YOUR_OPENAI_API_KEY_HERE'; // Replace with user's API key (securely via env vars in production)
-const DEMO_MODE = !API_KEY || API_KEY === 'YOUR_OPENAI_API_KEY_HERE'; // Fallback to demo if no key
+/* Reset and Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-// DOM Elements
-const promptEl = document.getElementById('prompt');
-const styleEl = document.getElementById('style');
-const sizeEl = document.getElementById('size');
-const sizeValueEl = document.getElementById('size-value');
-const aspectEl = document.getElementById('aspect');
-const generateBtn = document.getElementById('generate-btn');
-const loader = document.getElementById('loader');
-const errorMsg = document.getElementById('error-msg');
-const avatar = document.getElementById('avatar');
-const resultActions = document.querySelector('.result-actions');
-const historyGallery = document.getElementById('history-gallery');
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0f0f1a, #1a0033);
+  color: #fff;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-// Update size display
-sizeEl.addEventListener('input', () => {
-  sizeValueEl.textContent = sizeEl.value;
-});
+/* App Container: Defines the overall shape */
+.app-container {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 60px); /* Account for footer */
+}
 
-// Generate Avatar
-async function generateAvatar() {
-  const prompt = promptEl.value.trim();
-  const style = styleEl.value;
-  const size = sizeEl.value;
-  const aspect = aspectEl.value;
+/* Sidebar: Compact controls on the left */
+.sidebar {
+  width: 300px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 20px 20px 0;
+}
 
-  if (!prompt) {
-    showError('Please enter a description for your avatar.');
-    return;
+.sidebar-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar-header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+}
+
+.sidebar-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar label {
+  font-weight: bold;
+}
+
+.sidebar textarea {
+  height: 100px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  resize: vertical;
+}
+
+.sidebar small {
+  opacity: 0.7;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.control-group label {
+  margin-bottom: 5px;
+}
+
+select, input[type="range"] {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+button {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(45deg, #7c5cff, #00d4ff);
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  transition: opacity 0.3s, transform 0.2s;
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* Main Content: Spacious area for results */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.result-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+#loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top: 5px solid #7c5cff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.progress-bar {
+  width: 200px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#progress {
+  height: 100%;
+  background: #7c5cff;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+#avatar-container {
+  text-align: center;
+}
+
+#avatar {
+  width: 100%;
+  max-width: 512px;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  margin-bottom: 15px;
+}
+
+.result-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.history-section {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.history-section h3 {
+  margin-bottom: 15px;
+}
+
+#history-gallery {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+#history-gallery img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  object-fit: cover;
+}
+
+#history-gallery img:hover {
+  transform: scale(1.1);
+}
+
+.error {
+  color: #ff6b6b;
+  background: rgba(255, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.6;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive: Sidebar becomes top bar on mobile */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
   }
-
-  hideError();
-  showLoader();
-  hideResult();
-
-  try {
-    let imageUrl;
-    if (DEMO_MODE) {
-      // Demo mode: Use DiceBear for static avatars
-      const seed = encodeURIComponent(`${prompt} ${style}`);
-      imageUrl = `https://api.dicebear.com/7.x/${style}/svg?seed=${seed}&size=${size}`;
-    } else {
-      // Real AI mode: Use OpenAI DALL-E (example)
-      const response = await fetch('https://api.openai.com/v1/images/generations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`,
-        },
-        body: JSON.stringify({
-          prompt: `${style} style avatar: ${prompt}`,
-          n: 1,
-          size: getSizeString(size, aspect),
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message || 'API Error');
-      imageUrl = data.data[0].url;
+  .sidebar {
+    width: 100%;
+    border-radius: 0 0 20px 20px;
+    padding: 15px;
+  }
+  .main-content {
+    padding: 20px;
+  }
+  .result-actions {
+    flex-direction: column;
+  }
     }
-
-    avatar.src = imageUrl;
-    avatar.onload = () => {
-      hideLoader();
-      showResult();
-    };
-  } catch (error) {
-    hideLoader();
-    showError(`Generation failed: ${error.message}`);
-  }
-}
-
-// Helper: Get size string for API
-function getSizeString(size, aspect) {
-  const sizes = { '256': '256x256', '512': '512x512', '1024': '1024x1024' };
-  if (aspect === 'portrait') return sizes[size]?.replace('x', 'x') || '512x512'; // Adjust for portrait
-  return sizes[size] || '512x512';
-}
-
-// Download Image
-function downloadImg(format) {
-  const link = document.createElement('a');
-  link.href = avatar.src;
-  link.download = `avatar.${format}`;
-  link.click();
-}
-
-// Share Avatar (basic social share)
-function shareAvatar() {
-  if (navigator.share) {
-    navigator.share({ title: 'My AI Avatar', url: avatar.src });
-  } else {
-    navigator.clipboard.writeText(avatar.src);
-    alert('Image URL copied to clipboard!');
-  }
-}
-
-// Save to History
-function saveToHistory() {
-  const history = JSON.parse(localStorage.getItem('avatarHistory') || '[]');
-  history.unshift({ src: avatar.src, prompt: promptEl.value });
-  if (history.length > 10) history.pop(); // Limit to 10
-  localStorage.setItem('avatarHistory', JSON.stringify(history));
-  loadHistory();
-}
-
-// Load History
-function loadHistory() {
-  const history = JSON.parse(localStorage.getItem('avatarHistory') || '[]');
-  historyGallery.innerHTML = '';
-  history.forEach(item => {
-    const img = document.createElement('img');
-    img.src = item.src;
-    img.title = item.prompt;
-    img.onclick = () => { avatar.src = item.src; showResult(); };
-    historyGallery.appendChild(img);
-  });
-}
-
-// Clear History
-function clearHistory() {
-  localStorage.removeItem('avatarHistory');
-  loadHistory();
-}
-
-// Utility Functions
-function showLoader() { loader.classList.remove('hidden'); }
-function hideLoader() { loader.classList.add('hidden'); }
-function showResult() { avatar.classList.remove('hidden'); resultActions.classList.remove('hidden'); }
-function hideResult() { avatar.classList.add('hidden'); resultActions.classList.add('hidden'); }
-function showError(msg) { errorMsg.textContent = msg; errorMsg.classList.remove('hidden'); }
-function hideError() { errorMsg.classList.add('hidden'); }
-
-// Initialize
-document.addEventListener('DOMContentLoaded', loadHistory);
