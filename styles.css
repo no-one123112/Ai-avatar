@@ -1,4 +1,4 @@
-/* Reset and Base Styles */
+/* Reset and Base */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,85 +15,69 @@ body {
   flex-direction: column;
 }
 
-header {
-  text-align: center;
-  padding: 40px 20px;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-}
-
-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
-
-header p {
-  opacity: 0.8;
-}
-
-main {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+/* App Container: Defines the overall shape */
+.app-container {
+  display: flex;
   flex: 1;
+  min-height: calc(100vh - 60px); /* Account for footer */
 }
 
-.card {
+/* Sidebar: Compact controls on the left */
+.sidebar {
+  width: 300px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(15px);
-  padding: 25px;
-  border-radius: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 20px 20px 0;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+.sidebar-header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.input-card label {
-  display: block;
-  margin-bottom: 8px;
+.sidebar-header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+}
+
+.sidebar-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar label {
   font-weight: bold;
 }
 
-textarea {
-  width: 100%;
-  height: 120px;
-  border-radius: 12px;
+.sidebar textarea {
+  height: 100px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 15px;
-  font-size: 16px;
+  padding: 10px;
   background: rgba(255, 255, 255, 0.05);
   color: #fff;
   resize: vertical;
-  transition: border-color 0.3s;
 }
 
-textarea:focus {
-  outline: none;
-  border-color: #7c5cff;
-}
-
-small {
-  display: block;
-  margin-top: 5px;
+.sidebar small {
   opacity: 0.7;
 }
 
 .controls {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 15px;
-  margin-top: 20px;
-  align-items: end;
 }
 
 .control-group {
-  flex: 1;
-  min-width: 150px;
+  display: flex;
+  flex-direction: column;
 }
 
 .control-group label {
@@ -101,16 +85,15 @@ small {
 }
 
 select, input[type="range"] {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 8px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.05);
   color: #fff;
 }
 
 button {
-  padding: 12px 20px;
+  padding: 12px;
   border-radius: 10px;
   border: none;
   background: linear-gradient(45deg, #7c5cff, #00d4ff);
@@ -125,19 +108,30 @@ button:hover {
   transform: scale(1.05);
 }
 
-#generate-btn {
+/* Main Content: Spacious area for results */
+.main-content {
   flex: 1;
-  min-width: 200px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
-.result-card {
-  text-align: center;
+.result-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 #loader {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
 }
 
 .spinner {
@@ -154,12 +148,31 @@ button:hover {
   100% { transform: rotate(360deg); }
 }
 
+.progress-bar {
+  width: 200px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#progress {
+  height: 100%;
+  background: #7c5cff;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+#avatar-container {
+  text-align: center;
+}
+
 #avatar {
   width: 100%;
   max-width: 512px;
   border-radius: 14px;
-  margin: 20px 0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  margin-bottom: 15px;
 }
 
 .result-actions {
@@ -169,7 +182,14 @@ button:hover {
   flex-wrap: wrap;
 }
 
-.history-card h3 {
+.history-section {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.history-section h3 {
   margin-bottom: 15px;
 }
 
@@ -186,6 +206,7 @@ button:hover {
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.2s;
+  object-fit: cover;
 }
 
 #history-gallery img:hover {
@@ -198,6 +219,7 @@ button:hover {
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .hidden {
@@ -211,15 +233,20 @@ footer {
   background: rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive Design */
+/* Responsive: Sidebar becomes top bar on mobile */
 @media (max-width: 768px) {
-  .controls {
+  .app-container {
     flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    border-radius: 0 0 20px 20px;
+    padding: 15px;
+  }
+  .main-content {
+    padding: 20px;
   }
   .result-actions {
     flex-direction: column;
   }
-  header h1 {
-    font-size: 2rem;
-  }
-  }
+    }
